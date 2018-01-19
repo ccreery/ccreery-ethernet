@@ -25,6 +25,8 @@ static void eth_config_pins(void) {
 
 bool mgos_ethernet_init(void) {
   bool res = false;
+  
+  LOG(LL_INFO,("fee fie foe fum"));
 
   if (!mgos_sys_config_get_eth_enable()) {
     res = true;
