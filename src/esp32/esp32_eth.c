@@ -24,14 +24,14 @@ static void eth_config_pins(void) {
 
 #define PIN_PHY_POWER 17
 #if defined(MGOS_ETH_PHY_LAN87x0)
-    #define ETH_PHY_MODEL "LAN87x0";
-    #define ETH_PHY_CONFIG phy_lan8720_default_ethernet_config
+#define ETH_PHY_MODEL "LAN87x0";
+#define ETH_PHY_CONFIG phy_lan8720_default_ethernet_config
 #elif defined(MGOS_ETH_PHY_TLK110)
-    #define ETH_PHY_MODEL "TLK110";
-    #define ETH_PHY_CONFIG phy_tlk110_default_ethernet_config
+#define ETH_PHY_MODEL "TLK110";
+#define ETH_PHY_CONFIG phy_tlk110_default_ethernet_config
 #else
-    #error Unknown/unspecified PHY model
-#else
+#error Unknown/unspecified PHY model
+#endif
 
 static void phy_device_power_enable_via_gpio(bool enable) {
     assert(ETH_PHY_CONFIG.phy_power_enable);

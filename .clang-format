@@ -5,3 +5,5 @@ PointerBindsToType: false
 DerivePointerBinding: false
 IndentWidth: 4
 ColumnLimit: 160
+IndentPPDirectives: AfterHash
+SortIncludes: true
