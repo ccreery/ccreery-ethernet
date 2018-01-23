@@ -23,12 +23,22 @@ static void eth_config_pins(void) {
 }
 
 #define PIN_PHY_POWER 17
-static void phy_device_power_enable_via_gpio(eth_config_t *config, bool enable) {
-    assert(config->phy_power_enable);
+#if defined(MGOS_ETH_PHY_LAN87x0)
+    #define ETH_PHY_MODEL "LAN87x0";
+    #define ETH_PHY_CONFIG phy_lan8720_default_ethernet_config
+#elif defined(MGOS_ETH_PHY_TLK110)
+    #define ETH_PHY_MODEL "TLK110";
+    #define ETH_PHY_CONFIG phy_tlk110_default_ethernet_config
+#else
+    #error Unknown/unspecified PHY model
+#else
+
+static void phy_device_power_enable_via_gpio(bool enable) {
+    assert(ETH_PHY_CONFIG.phy_power_enable);
 
     if (!enable) {
-        /* Do the PHY-specific power_enable(false) function before powering down */
-        config->phy_power_enable(false);
+        // Do the PHY-specific power_enable(false) function before powering down
+        ETH_PHY_CONFIG.phy_power_enable(false);
     }
 
     gpio_pad_select_gpio(PIN_PHY_POWER);
@@ -46,7 +56,7 @@ static void phy_device_power_enable_via_gpio(eth_config_t *config, bool enable) 
 
     if (enable) {
         // Run the PHY-specific power on operations now the PHY has power
-        config->phy_power_enable(true);
+        ETH_PHY_CONFIG.phy_power_enable(true);
     }
 }
 
@@ -65,17 +75,7 @@ bool mgos_ethernet_init(void) {
         goto clean;
     }
 
-    eth_config_t config;
-    const char *phy_model;
-#if defined(MGOS_ETH_PHY_LAN87x0)
-    phy_model = "LAN87x0";
-    config = phy_lan8720_default_ethernet_config;
-#elif defined(MGOS_ETH_PHY_TLK110)
-    phy_model = "TLK110";
-    config = phy_tlk110_default_ethernet_config;
-#else
-#error Unknown/unspecified PHY model
-#endif
+    eth_config_t config = ETH_PHY_CONFIG;
 
     /* Set the PHY address in the example configuration */
     config.phy_addr = mgos_sys_config_get_eth_phy_addr();
@@ -93,7 +93,7 @@ bool mgos_ethernet_init(void) {
     esp_eth_get_mac(mac);
     bool is_dhcp = ip4_addr_isany_val(static_ip.ip);
 
-    LOG(LL_INFO, ("ETH: MAC %02x:%02x:%02x:%02x:%02x:%02x; PHY: %s @ %d%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], phy_model,
+    LOG(LL_INFO, ("ETH: MAC %02x:%02x:%02x:%02x:%02x:%02x; PHY: %s @ %d%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], ETH_PHY_MODEL,
                   mgos_sys_config_get_eth_phy_addr(), (is_dhcp ? "; IP: DHCP" : "")));
     if (!is_dhcp) {
         char ips[16], nms[16], gws[16];
