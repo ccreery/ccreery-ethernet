@@ -1,0 +1,7 @@
+BasedOnStyle: Google
+AllowShortFunctionsOnASingleLine: false
+SpaceAfterCStyleCast: true
+PointerBindsToType: false
+DerivePointerBinding: false
+IndentWidth: 4
+ColumnLimit: 160
