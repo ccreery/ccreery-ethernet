@@ -9,8 +9,8 @@
 #include <string.h>
 
 #include "lwip/ip_addr.h"
-
 #include "mgos_sys_config.h"
+#include "common/cs_dbg.h" // for LOG macro
 
 const char *mgos_eth_speed_str(enum mgos_eth_speed speed) {
   switch (speed) {
