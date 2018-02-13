@@ -12,6 +12,8 @@
 #include "mgos_sys_config.h"
 #include "common/cs_dbg.h" // for LOG macro
 
+fuck
+
 const char *mgos_eth_speed_str(enum mgos_eth_speed speed) {
   switch (speed) {
     case MGOS_ETH_SPEED_AUTO:
